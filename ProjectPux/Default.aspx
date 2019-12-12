@@ -9,8 +9,8 @@
 
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 
-     <asp:GridView CssClass="table table-striped" ID="FilesGridView" runat="server" AllowPaging="True" 
-            AllowSorting="False" emptydatatext="Žádné akce nebyly detekovány">
+     <asp:GridView CssClass="table table-striped" ID="FilesGridView" runat="server" AllowPaging="false" 
+            AllowSorting="False" emptydatatext="Žádné akce nebyly detekovány" AutoGenerateColumns="false">
             <Columns>
                 <asp:BoundField DataField="CurrentFileState" HeaderText="Příznak" ReadOnly="True" />
                 <asp:BoundField DataField="Name" HeaderText="Název souboru"  />
@@ -18,7 +18,7 @@
             </Columns>
         </asp:GridView>
 
-
+    <br />
     <asp:Label ID="InfoLabel" runat="server"></asp:Label>
     
 

@@ -15,17 +15,16 @@ namespace ProjectPux
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
             if (!IsPostBack)
             {
                 directoryStructure = new DirectoryStructure();
-                ViewState["test"] = directoryStructure;
-               
+                ViewState["Data"] = directoryStructure;
             }
             else
-            directoryStructure = (DirectoryStructure)ViewState["test"];
+                directoryStructure = (DirectoryStructure)ViewState["Data"];
 
             InfoLabel.Visible = false;
+            FilesGridView.Visible = true;
         }
 
         protected void GetChanges_Click(object sender, EventArgs e)
@@ -33,26 +32,27 @@ namespace ProjectPux
             string absolutePath = HttpContext.Current.Server.MapPath(PathTextBox.Text);
             if (System.IO.Directory.Exists(absolutePath))
             {
-                DirectoryManager.Directory currentDir = directoryStructure?.GetDirectory(PathTextBox.Text);
-                if (currentDir != null)
+                DirectoryManager.Directory currentDirectory = directoryStructure?.GetDirectory(PathTextBox.Text);
+                if (currentDirectory != null)
                 {
-                    currentDir.SetCurrentFilesList();
-                    List<DirectoryManager.File> fileActionList = currentDir.GetFilesWithAction();
-                   
-                    FilesGridView.DataSource = fileActionList;
+                    currentDirectory.SetCurrentFilesList();
+                    List<DirectoryManager.File> filesAWithAction = currentDirectory.GetFilesWithAction();
+                    FilesGridView.DataSource = filesAWithAction;
                     FilesGridView.DataBind();
-                                     
+                    FilesGridView.Visible = true;
                 }
                 else
                 {
-                    currentDir = new DirectoryManager.Directory(PathTextBox.Text);
-                    directoryStructure.Directories.Add(currentDir);
+                    currentDirectory = new DirectoryManager.Directory(PathTextBox.Text);
+                    directoryStructure.AddDirectory(currentDirectory);
+
                     InfoLabel.Visible = true;
                     InfoLabel.Text = $"Byl namapován nový adresář: {absolutePath}";
+                    FilesGridView.Visible = false;
 
                 }
-                currentDir.OldFiles = currentDir.CurrentFiles;
-                ViewState["test"] = directoryStructure;
+                currentDirectory.SetFileHistory();
+                ViewState["Data"] = directoryStructure;
             }
             else
             {
